@@ -31,14 +31,6 @@ const Login = (props) => {
                 setLoginData({...data})
             }) 
         }
-    
-
-    const handleEmail = e =>{
-        setLoginData({...LoginData, [e.target.id]: e.target.value})
-    }
-    const handlePassword = e =>{
-        setLoginData({...LoginData, [e.target.id]: e.target.value})
-    }
 
     const verify = (email === ""  || password === "") ?(
         <button disabled>Login</button>
@@ -54,7 +46,7 @@ const Login = (props) => {
         
         <div className='signUpLoginBox'>
             <div className='slContainer'>
-                <div className='formBoxLeftSignup'>    
+                <div className='formBoxLeftLogin'>    
                 </div>
                 <div className='formBoxRight'>
                     <div className='formContent'>
@@ -62,17 +54,17 @@ const Login = (props) => {
                             {errormsg}
                             <h2>Login</h2>
                             <div className='inputBox'>
-                                <input value={email} onChange={handleEmail} type='email' id='email' autoComplete='off' required></input>
+                                <input value={email} onChange={(e)=>{setLoginData({...LoginData,email:e.target.value})}} type='email' id='email' autoComplete='off' required></input>
                                 <label htmlFor='email'>Email</label>
                             </div>
                             <div className='inputBox'>
-                                <input value={password} onChange={handlePassword} type='Password' id='password ' autoComplete='off' required></input>
+                                <input value={password} onChange={(e)=>{setLoginData({...LoginData,password:e.target.value})}} type='Password' id='password ' autoComplete='off' required></input>
                                 <label htmlFor='Password'>Password</label>
                             </div>
                             {verify}
                         </form>
                         <div className="linkContainer">
-                            <Link to="/login" className="simpleLink">New on Marvel? Sign Up Now</Link>
+                            <Link to="/signup" className="simpleLink">New on Marvel? Sign Up Now</Link>
                         </div>
                     </div>
 

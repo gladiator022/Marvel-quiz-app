@@ -7,6 +7,7 @@ import Login from '../login'
 import Welcome from '../welcome'
 import SignUp from '../signup'
 import Error from '../errorPage'
+import Forget from '../forget_password';
 import {Route,Switch,BrowserRouter} from 'react-router-dom'
 
 const App = () => {
@@ -18,6 +19,7 @@ const App = () => {
 					<Route path="/login" component ={Login}/> 
 					<Route path="/signup" component ={SignUp}/> 
 					<Route path="/welcome" component ={Welcome}/>
+					<Route path="/forgetpassword" component ={Forget}/>
 					<Route component ={Error}/>
 				</Switch>
 				<Footer/>

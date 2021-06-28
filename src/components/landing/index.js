@@ -24,8 +24,7 @@ const Landing = () => {
             (volverin.current.classList.remove('leftImg')) :
             (volverin.current.classList.remove('rightImg'))
         }
-
-        console.log('bkdbjdk')
+        
    const displaybtn = btn && (
         <Fragment>
             <div className='leftBox'>

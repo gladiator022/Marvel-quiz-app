@@ -25,6 +25,12 @@ const SignUp = (props) => {
     const handlerSubmit = e => {
         e.preventDefault();
         contextfire.SignUser(email,password1)
+            .then(authUser =>{
+                return contextfire.user(authUser.user.uid).set({
+                    pseudo,
+                    email
+                })
+            })
              .then( user => {
                 setLoginData({...data})
                 props.history.push('/welcome')
@@ -34,7 +40,6 @@ const SignUp = (props) => {
                 setLoginData({...data})
             }) 
         }
-    
 
     const handleChange = e =>{
         setLoginData({...LoginData, [e.target.id]: e.target.value})

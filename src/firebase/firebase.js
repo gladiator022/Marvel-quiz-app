@@ -1,5 +1,6 @@
-import app from "firebase/app";
+import firebase from "firebase";
 import 'firebase/auth'
+import 'firebase//firestore'
 
 class Firebase  {
 
@@ -17,20 +18,18 @@ class Firebase  {
 
 
     constructor() {
-        app.initializeApp(this.Config)
-        this.auth = app.auth();
+        firebase.initializeApp(this.Config)
+        this.auth = firebase.auth();
+        this.db = firebase.firestore()
     }
 
-    SignUser = (email, password) =>{
-        return this.auth.createUserWithEmailAndPassword(email, password);
-    }
+    SignUser = (email, password) => this.auth.createUserWithEmailAndPassword(email, password);
 
-    LoginUser = (email, password) =>{
-        return this.auth.signInWithEmailAndPassword(email, password);
-    }
-    LogoutUser = () =>{
-        return this.auth.signOut();
-    }
+    LoginUser = (email, password) => this.auth.signInWithEmailAndPassword(email, password);
+
+    LogoutUser = () => this.auth.signOut();
+
+    user = uid => this.db.doc(`users/${uid}`)
     
 }
 
