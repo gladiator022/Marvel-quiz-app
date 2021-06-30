@@ -1,9 +1,9 @@
 import React from 'react'
 
-const Levels = (props) => {
+const Levels = props => {
     return (
         <div className="levelsContainer">
-            <h2 className='headingLevels'> {props.p}</h2>
+            <h2 className='headingLevels'> {props.level} </h2>
         </div>
     )
 }

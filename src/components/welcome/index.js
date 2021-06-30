@@ -49,12 +49,6 @@ const Welcome = props => {
             <div className='container'>
                 <Logout  props={props} />
                 <Quiz userdata={userdata}/>
-                <h2>Question Quiz</h2>
-                <p className='answerOptions'>Question 1</p>
-                <p className='answerOptions'>Question 1</p>
-                <p className='answerOptions'>Question 1</p>
-                <p className='answerOptions'>Question 1</p>
-                <button className='btnSubmit'>Next</button>
             </div>
         </div>
     )

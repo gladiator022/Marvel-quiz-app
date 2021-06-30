@@ -1,14 +1,15 @@
 import React,{Fragment} from 'react'
 
-const Progress = () => {
+const Progress = props => {
+    const {Idquest}=props
     return (
         <Fragment>
             <div className='percentage'>
-                <div className='progressPercent'> Question 1/10</div>
-                <div className='progressPercent'> Progression 10%</div>
+                <div className='progressPercent'> Question {Idquest +1}/10</div>
+                <div className='progressPercent'> Progression {(Idquest +1)* 10} %</div>
             </div>
             <div className='progressBar'>
-                <div className='progressBarChange' style={{width:'100%'}}>
+                <div className='progressBarChange' style={{width:`${(Idquest +1)*10}%`}}>
 
                 </div>
             </div>
