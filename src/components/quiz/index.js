@@ -1,38 +1,142 @@
-import React,{useEffect,useState,useLayoutEffect,useRef} from 'react'
+import React,{useEffect,useState,useCallback} from 'react';
+import  {toast}  from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Levels from '../levels'
 import Progress from '../progression'
-import { QuizMarvel } from '../quiz_m'
+import { quizz } from '../quiz_m'
+import QuizOver from '../over'
 
 
-const levelIni = ["Beginer","Confirm","Expert"];
+toast.configure()
+const levelIni = ["Beginner","Confirm","Expert"];
 
+const answersRef = React.createRef(null)
 
 const Quiz = props => {
 
     const [quizlevl, setquizlev] = useState(0)
-    const [levels, setlevels] = useState(levelIni)
+    const [levels] = useState(levelIni)
     const [question, setquestion] = useState(null)
     const [Idquestion, setIdquestion] = useState(0)
     const [options, setoptions] = useState([])
     const [choosen, setchoosen] = useState(false)
-    const [Data, setData] = useState(null)      
-    //const [answers, setanswers] = useState(null)      
-    const [youranswer, setyouranswer] = useState(null)      
+    const [Data, setData] = useState(null)           
+    const [youranswer, setyouranswer] = useState(null)           
     const [score, setscore] = useState(0)  
-    const answersRef = useRef(null)    
+    const [over, setover] = useState(false)  
+    const [btnMsg, setbtnMsg] = useState('Next')  
+    const [percent, setpercent] = useState(null)  
 
+
+  
+    const {pseudo} = props.userdata
+    
+    
+
+    const dataRef = React.createRef(null)
 
     const fetchData =  (level) =>{
-        const load = QuizMarvel[0].quizz[level]
-        //setanswers(load.map( ( answer ) => answer.answer ))
-        answersRef.current = load.map( ( answer ) => answer.answer )
+        const load = quizz[level]
         const newArray = load.map( ( {answer, ...keRest} ) => keRest )
-        setData(newArray)
+        setData(prevState => newArray)
     }
 
-    useLayoutEffect( () => {
+
+    
+    const showWelcomeMsg = pseudo =>{
+
+        if (pseudo !== '') {
+            toast.warn(`welcome ${pseudo}`, {
+                position: "top-right",
+                autoClose: 4000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: false,
+                progress: undefined,
+                });
+        } 
+    }
+
+    const showSucessMsg = () =>{
+        toast.success(`Correct +1 Score : ${score}`, {
+            position: "top-right",
+            autoClose: 1000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: false,
+            progress: undefined,
+            collapseDuration: 500,
+            enter: 'zoomIn', 
+            exit: 'zoomOut',
+        });
+
+    }
+
+    const showErrorMsg = () =>{
+
+        toast.error(`Wrong 0 Score : ${score}`, {
+            position: "top-right",
+            autoClose: 1000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: false,
+            progress: undefined,
+        }); 
+    }
+ 
+
+    const Nextquestion = () =>{
+
+        answersRef.current = quizz[levels[quizlevl]][Idquestion].answer
+        let goodAnswer = answersRef.current
+
+        if (Idquestion === 9) {
+            if (goodAnswer === youranswer ) {
+                setscore(score=>score+1);
+                showSucessMsg();
+            }else showErrorMsg();
+
+            setover(true)
+            
+        }
+        else{
+
+            Idquestion === 8 && setbtnMsg('Finish')
+            if (goodAnswer === youranswer ) {
+                setscore(score=>score+1);
+                showSucessMsg(score)
+            } else showErrorMsg();
+            setIdquestion(Idquestion + 1)
+        } 
+        setchoosen(false)
+        
+    }
+     
+    const goToNext = useCallback(
+        (lev) => {
+            setscore(0)
+            setIdquestion(0)
+            setover(false)
+            setquizlev(lev);
+        },[]) 
+    
+
+    const handleChoice = (option) =>{
+        setyouranswer((prev)=> option ) 
+        setchoosen(true)
+    }
+
+   
+
+    useEffect( () => {
         fetchData(levels[quizlevl])
     },[quizlevl,levels])
+
+
+    useEffect(()=>showWelcomeMsg(pseudo),[pseudo])
 
     useEffect(() => {
         if (!!Data) {
@@ -40,58 +144,33 @@ const Quiz = props => {
             setquestion(Data[Idquestion].question)
         }
     }, [Data,Idquestion])
-
-    const Nextquestion = () =>{
-        if (Idquestion<9) {
-            setchoosen(false)
-            setIdquestion(Idquestion + 1)
-        } else {
-            if(score>=5){
-                if (quizlevl<2) {
-                    setquizlev(quizlevl +1);
-                    setIdquestion(0);setscore(0)
-                }
-                else console.log('end')
-                
-            } 
-            else{
-                (console.log('end'))
-            }
-            console.log(`end of the level.  Score = ${score} /10`)
-        }
-    }
-    const handleChoice = (option) =>{
-
-        setyouranswer((prev)=> {
-            if (prev !== option && answersRef.current[Idquestion] === option) {
-                setscore((score)=>score+1)
-                console.log('true')
-            }
-            else{
-                console.log(score)
-            }
-            return option
-        })
-
-        setchoosen(true)
-        
-    }
+     
+    dataRef.current  =  quizz[levels[quizlevl]]
+   
     const dispOptions = options.map((option,index) =>{
 
         return <p key={index} onClick={()=> handleChoice(option)} 
                     className={`answerOptions ${option === youranswer ? (`selected`):(null)}` }>
-                    {option} 
+                    {option}
                 </p>
     })
+
     return (
-        <div>
-            <Levels level ={levels[quizlevl]} />
-            <Progress Idquest={Idquestion} />
-            <h2> {question} </h2>
-            { dispOptions}
-            <button onClick={Nextquestion} disabled={!choosen} className={`btnSubmit`}>Next</button>
-        </div>
+        over? (
+            <QuizOver next={(lev)=> goToNext(lev)} quizlevl={quizlevl} ref={dataRef} score={score} />
+        ):(
+            <div>
+                <Levels quizlevl={quizlevl} level ={levels} />
+                <Progress Idquest={Idquestion} />
+                <h2> {question} </h2>
+                { dispOptions}
+                {over}
+                <button onClick={Nextquestion} disabled={!choosen} className={`btnSubmit`}> {btnMsg} </button>
+            </div>
+        )
     )
+
+     
 }
 
 export default Quiz

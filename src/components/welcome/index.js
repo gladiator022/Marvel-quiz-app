@@ -18,11 +18,10 @@ const Welcome = props => {
     const firebase = useContext(Firebasecontext)
 
          useEffect(() => {
+            console.log((`1st welcome: ${userdata.pseudo}`))
+            let listener = firebase.auth.onAuthStateChanged(user =>
+                user ?  setuserSession(user) : props.history.push('/') )
 
-            let listener = firebase.auth.onAuthStateChanged(user =>{
-                user ?  setuserSession(user) : props.history.push('/')
-                    
-            })
             if(userSession !== null){
                 firebase.user(userSession.uid)
                 .get()

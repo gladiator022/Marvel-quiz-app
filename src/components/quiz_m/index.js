@@ -1,7 +1,6 @@
-export const QuizMarvel = [
-    {
-        quizz: {
-            Beginer: [
+
+ export const quizz = {
+            Beginner: [
                 {
                     id: 0,
                     question: "De quelle équipe fait partie Iceman?",
@@ -368,5 +367,5 @@ export const QuizMarvel = [
                 }
             ]
         }
-    }
-];
+    
+;
