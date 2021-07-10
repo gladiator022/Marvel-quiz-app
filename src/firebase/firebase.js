@@ -6,13 +6,12 @@ class Firebase  {
 
   // Your web app's Firebase configuration
    Config = {
-
-    apiKey: "AIzaSyAO_sEPOFO89M_yVkvercTluXz-TdCmZBw",
-    authDomain: "marvel-app-d177c.firebaseapp.com",
-    projectId: "marvel-app-d177c",
-    storageBucket: "marvel-app-d177c.appspot.com",
-    messagingSenderId: "413230072703",
-    appId: "1:413230072703:web:4aa0f2348495aa51b7104a"
+    apiKey: process.env.REACT_APP_API_KEY,
+    authDomain: process.env.REACT_APP_AUTH_DOMAIN,
+    projectId:process.env.REACT_APP_PROJECT_ID,
+    storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
+    messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
+    appId: process.env.REACT_APP_APP_ID  
   };
   // Initialize Firebase
 

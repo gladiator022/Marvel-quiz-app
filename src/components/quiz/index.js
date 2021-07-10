@@ -1,4 +1,5 @@
 import React,{useEffect,useState,useCallback} from 'react';
+import { IoChevronForwardCircle } from 'react-icons/io5';
 import  {toast}  from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Levels from '../levels'
@@ -25,10 +26,10 @@ const Quiz = props => {
     const [score, setscore] = useState(0)  
     const [over, setover] = useState(false)  
     const [btnMsg, setbtnMsg] = useState('Next')  
-    const [percent, setpercent] = useState(null)  
+    const [badAnswers, setbadAnswers] = useState([])  
 
+    
 
-  
     const {pseudo} = props.userdata
     
     
@@ -59,7 +60,7 @@ const Quiz = props => {
     }
 
     const showSucessMsg = () =>{
-        toast.success(`Correct +1 Score : ${score}`, {
+        toast.success(`Correct +1 `, {
             position: "top-right",
             autoClose: 1000,
             hideProgressBar: false,
@@ -76,7 +77,7 @@ const Quiz = props => {
 
     const showErrorMsg = () =>{
 
-        toast.error(`Wrong 0 Score : ${score}`, {
+        toast.error(`Wrong 0 `, {
             position: "top-right",
             autoClose: 1000,
             hideProgressBar: false,
@@ -97,7 +98,10 @@ const Quiz = props => {
             if (goodAnswer === youranswer ) {
                 setscore(score=>score+1);
                 showSucessMsg();
-            }else showErrorMsg();
+            }else {
+                showErrorMsg();
+                setbadAnswers(ans => {return [...ans,...[Idquestion]]})
+            }
 
             setover(true)
             
@@ -108,19 +112,22 @@ const Quiz = props => {
             if (goodAnswer === youranswer ) {
                 setscore(score=>score+1);
                 showSucessMsg(score)
-            } else showErrorMsg();
+            } else {
+                showErrorMsg();
+                setbadAnswers(ans => {return [...ans,...[Idquestion]]})
+            }
             setIdquestion(Idquestion + 1)
         } 
         setchoosen(false)
         
     }
-     
     const goToNext = useCallback(
         (lev) => {
             setscore(0)
             setIdquestion(0)
             setover(false)
             setquizlev(lev);
+            setbadAnswers([])
         },[]) 
     
 
@@ -151,13 +158,13 @@ const Quiz = props => {
 
         return <p key={index} onClick={()=> handleChoice(option)} 
                     className={`answerOptions ${option === youranswer ? (`selected`):(null)}` }>
-                    {option}
+                     <IoChevronForwardCircle size={'20px'} style={{marginRight:'15px'}} />{option}
                 </p>
     })
 
     return (
         over? (
-            <QuizOver next={(lev)=> goToNext(lev)} quizlevl={quizlevl} ref={dataRef} score={score} />
+            <QuizOver badAnswers={badAnswers} next={(lev)=> goToNext(lev)} quizlevl={quizlevl} ref={dataRef} score={score} />
         ):(
             <div>
                 <Levels quizlevl={quizlevl} level ={levels} />

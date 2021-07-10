@@ -1,4 +1,4 @@
-import React,{useState,useContext} from 'react'
+import React,{useState,useContext,useEffect,Fragment} from 'react'
 import  { Firebasecontext } from '../../firebase'
 import { Link } from 'react-router-dom'
 
@@ -13,7 +13,7 @@ const Login = (props) => {
     
     const contextfire = useContext(Firebasecontext)
     const [error, seterror] = useState('')
-    
+    const [userSession, setuserSession] = useState('')
     const [LoginData, setLoginData] = useState(data)
 
     const {email,password} = LoginData;
@@ -40,10 +40,23 @@ const Login = (props) => {
 
     const errormsg = error !== '' && <span>{error.message} </span>
     
+    useEffect(() => {
+        let listener = contextfire.auth.onAuthStateChanged(user =>{
+                if(user) { 
+                    props.history.push('/welcome')
+                }else setuserSession(null)
+            } )
+            return () => {
+                listener()
+            }
+    }, [userSession])
 
-
-    return (
-        
+    return  userSession !== null? (
+        <Fragment>
+            <div className='loader'></div>
+            <p className='loaderText'>loading.......</p>
+        </Fragment>
+    ):(
         <div className='signUpLoginBox'>
             <div className='slContainer'>
                 <div className='formBoxLeftLogin'>    
@@ -73,6 +86,7 @@ const Login = (props) => {
             
         </div>
     )
+        
 
  }
 export default Login

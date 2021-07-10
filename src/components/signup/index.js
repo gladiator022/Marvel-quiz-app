@@ -1,4 +1,4 @@
-import React,{useState,useContext} from 'react'
+import React,{useState,useContext,useEffect,Fragment} from 'react'
 import  { Firebasecontext } from '../../firebase'
 import { Link } from 'react-router-dom'
 
@@ -16,7 +16,7 @@ const SignUp = (props) => {
     
     const contextfire = useContext(Firebasecontext)
     const [error, seterror] = useState('')
-    
+    const [userSession, setuserSession] = useState('')
     const [LoginData, setLoginData] = useState(data)
 
     const {pseudo,email,password1,password2} = LoginData;
@@ -45,6 +45,16 @@ const SignUp = (props) => {
         setLoginData({...LoginData, [e.target.id]: e.target.value})
     }
     
+    useEffect(() => {
+        let listener = contextfire.auth.onAuthStateChanged(user =>{
+                if(user) { 
+                    props.history.push('/welcome')
+                }else setuserSession(null)
+            } )
+            return () => {
+                listener()
+            }
+    }, [userSession])
 
     const verify = ((pseudo === "" || email === ""  || password1 === ""|| password2 === "") || (password1!== password2) )?(
         <button disabled>Sign Up</button>
@@ -56,8 +66,12 @@ const SignUp = (props) => {
     
 
 
-    return (
-        
+    return  userSession !== null? (
+        <Fragment>
+            <div className='loader'></div>
+            <p className='loaderText'>loading.......</p>
+        </Fragment>
+    ):(
         <div className='signUpLoginBox'>
             <div className='slContainer'>
                 <div className='formBoxLeftSignup'>    
@@ -95,6 +109,8 @@ const SignUp = (props) => {
             
         </div>
     )
+        
+        
 
  }
 export default SignUp

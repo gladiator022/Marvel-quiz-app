@@ -9,10 +9,12 @@ import SignUp from '../signup'
 import Error from '../errorPage'
 import Forget from '../forget_password';
 import {Route,Switch,BrowserRouter} from 'react-router-dom'
+import {IconContext} from 'react-icons'
 
 const App = () => {
     return (
 			<BrowserRouter>
+			<IconContext.Provider value={{style:{verticalAlign:'middle'}}}>
 				<Header/>
 				<Switch>
 					<Route exact path="/" component ={Landing}/> 
@@ -23,6 +25,7 @@ const App = () => {
 					<Route component ={Error}/>
 				</Switch>
 				<Footer/>
+			</IconContext.Provider>
 			</BrowserRouter>
     );
 }
